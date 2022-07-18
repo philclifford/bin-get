@@ -10,5 +10,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# release code may have bugs so fetch the latest release
+# https://raw.githubusercontent.com/wimpysworld/deb-get/0.3.1/deb-get
 
-RUN curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/$(wget -q https://api.github.com/repos/wimpysworld/deb-get/releases -O -  |grep "tag_name" | head -n1 | cut -d'"' -f4)/deb-get | sudo -E bash -s install deb-get
